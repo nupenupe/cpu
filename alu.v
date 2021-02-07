@@ -15,25 +15,25 @@ always @(posedge tclk or posedge reset) begin
     end
     else begin
     if(instruction[7:5] == 2'b0xx or 2'b101) begin
-    casex(instruction[7:5])
-        3'b000: begin//ADD 
-            {c,latch}<=acc + d_bus;
-            z<=((acc + d_bus)==8'b0);
-            end 
-        3'b001: begin//SUB
-            {c,latch}<=acc - d_bus; 
-            z<=((acc - d_bus)==8'b0);
-            end 
-        3'b010: begin//NAND 
-            {c,latch}<=~(acc & d_bus); 
-            z<=((~(acc & d_bus))==8'b0);
-            end
-        3'b011: begin //SHIFT
-            if(instruction[4:0]==5'h1f) {c,latch}<=acc >> 1; z<=((acc >>1 )==8'b0);//RIGHT SHIFT
-            else {c,latch}<=acc << 1; z<=((acc <<1 )==8'b0); //LEFT SHIFT
-            end
-        3'b101: latch<=acc; //ST
-    endcase
+        casex(instruction[7:5])
+            3'b000: begin//ADD 
+                {c,latch}<=acc + d_bus;
+                z<=((acc + d_bus)==8'b0);
+                end 
+            3'b001: begin//SUB
+                {c,latch}<=acc - d_bus; 
+                z<=((acc - d_bus)==8'b0);
+                end 
+            3'b010: begin//NAND 
+                {c,latch}<=~(acc & d_bus); 
+                z<=((~(acc & d_bus))==8'b0);
+                end
+            3'b011: begin //SHIFT
+                if(instruction[4:0]==5'h1f) {c,latch}<=acc >> 1; z<=((acc >>1 )==8'b0);//RIGHT SHIFT
+                else {c,latch}<=acc << 1; z<=((acc <<1 )==8'b0); //LEFT SHIFT
+                end
+            3'b101: latch<=acc; //ST
+        endcase
     end
     if(instruction[7:5] == 2'b100) acc<=d_bus; //LD
     end
