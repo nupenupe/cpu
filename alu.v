@@ -1,4 +1,5 @@
-module alu( reset, tclk, instruction, acc, latch, c, z, d_bus );
+
+module alu( reset, tclk, instruction, state, acc, latch, c, z, d_bus );
 
 input reset, tclk;
 input [7:0] instruction;
@@ -14,7 +15,7 @@ always @(posedge tclk or posedge reset) begin
         acc<=8'b0; latch<=8'b0; c<=1'b0; z<=1'b0; 
     end
     else begin
-    if(instruction[7:5] == 2'b0xx or 2'b101) begin
+    if(((instruction[7:5] == 2'b0xx)||(instruction[7:5] == 2'b101))&&(state == EXEC_B)) begin //EXEC_Bの時,算術命令とSTを行う
         casex(instruction[7:5])
             3'b000: begin//ADD 
                 {c,latch}<=acc + d_bus;
@@ -35,11 +36,6 @@ always @(posedge tclk or posedge reset) begin
             3'b101: latch<=acc; //ST
         endcase
     end
-    if(instruction[7:5] == 2'b100) acc<=d_bus; //LD
+    if((instruction[7:5] == 2'b100) && (state == EXEC_A)) acc<=d_bus; //EXEC_Aの時LD行う
     end
 end
-
-assign d_bus= (instruction[7:5] == 2'b0xx or 2'b100)? latch: 8'bz; //d_busへ流すor流さない(ハイインピーダンス) 
-
-
-endmodule
