@@ -39,3 +39,9 @@ always @(posedge tclk or posedge reset) begin
     if((instruction[7:5] == 2'b100) && (state == EXEC_A)) acc<=d_bus; //EXEC_Aの時LD行う
     end
 end
+
+assign d_bus= (((instruction[7:5] == 2'b0xx)||(instruction[7:5] == 2'b100))&&(state == EXEC_B))? latch: 8'bz; //EXEC_Bの時latchの値をd_busへ流すor流さない(ハイインピーダンス) 
+
+parameter FETCH = 2'b00, DECODE = 2'b01, EXEC_A = 2'b10, EXEC_B = 2'b11;
+
+endmodule
