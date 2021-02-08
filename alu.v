@@ -1,10 +1,11 @@
+
 module alu( reset, tclk, instruction, state, acc, latch, c, z, d_bus );
 
 input reset, tclk; //reset ,clock
 input [7:0] instruction; //instruction register
 input [1:0] state; //state (instrucrtion cycle)
 output [7:0] acc, latch; //accumulator,latch
-reg [7:0] acc, latch
+reg [7:0] acc, latch;
 output c,z; //carry_flag ,zero_flag
 reg c, z;
 inout [7:0] d_bus; //data bus
