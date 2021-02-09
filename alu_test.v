@@ -9,7 +9,7 @@ always #(STEP/2) tclk<=!tclk;
 reg reset;
 reg [7:0] instruction;
 reg ldAcc, useAlu, dbusSelect;
-reg [7:0] in_d_bus; //d_busの状態を見る変数
+reg [7:0] in_d_bus; //d_busの中身を変えるための変数
 
 
 //output siganl
