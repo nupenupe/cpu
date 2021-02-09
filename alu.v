@@ -1,9 +1,8 @@
-
 module alu( reset, tclk, instruction, ldAcc, useAlu, dbusSelect, acc, latch, c, z, d_bus );
 
 input reset, tclk; //reset ,clock
 input [7:0] instruction; //instruction register
-input ldAcc, useAlu, dbusSelect;
+input ldAcc, useAlu, dbusSelect; //control signal
 output [7:0] acc, latch; //accumulator,latch
 reg [7:0] acc, latch;
 output c,z; //carry_flag ,zero_flag
