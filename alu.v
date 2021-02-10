@@ -1,8 +1,9 @@
+
 module alu( reset, tclk, instruction, ldAcc, useAlu, dbusSelect, acc, latch, c, z, d_bus );
 
 input reset, tclk; //reset ,clock
 input [7:0] instruction; //instruction register
-input ldAcc, useAlu, dbusSelect; //control signal
+input ldAcc, useAlu, dbusSelect;
 output [7:0] acc, latch; //accumulator,latch
 reg [7:0] acc, latch;
 output c,z; //carry_flag ,zero_flag
@@ -45,7 +46,5 @@ always @(posedge tclk or posedge reset) begin
 end
 
 assign d_bus= (dbusSelect)? latch: 8'bz; //EXEC_Bの時latchの値をd_busへ流すor流さない(ハイインピーダンス) 
-
-parameter FETCH = 2'b00, DECODE = 2'b01, EXEC_A = 2'b10, EXEC_B = 2'b11;
 
 endmodule
