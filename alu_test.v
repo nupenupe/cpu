@@ -1,95 +1,67 @@
 `timescale 1ns/1ns
-module alu_test;
-
+module mem_test;
 //input signal (clock)
 reg tclk = 1;
 always #(STEP/2) tclk<=!tclk;
 
 //input signal
-reg reset;
-reg [7:0] instruction;
-reg ldAcc, useAlu, dbusSelect;
-reg [7:0] in_d_bus; //d_busの中身を変えるための変数
-
+reg [4:0] a_bus; 
+reg [7:0] inp; 
+reg [7:0] instruction; 
+reg dbusSelect; 
+reg [7:0] in_d_bus;
 
 //output siganl
-wire c,z;
-wire [7:0] acc,latch;
+wire [7:0] oup;
 wire [7:0] d_bus;
-
-//inout信号の入力をそのまま出力に流すか(Execute cycle Aの時にd_busの中身を変えるため)
-reg inout_flag = 1;
+wire [7:0] view_mem;
+//inout信号の入力をそのまま出力に流すか(d_busの中身を変えるため)
+reg inout_flag ;
 
 //双方向信号対応用
 assign d_bus = (inout_flag)? in_d_bus: 8'bz;
 
 parameter STEP = 100;
 
-alu alu( reset, tclk, instruction, ldAcc, useAlu, dbusSelect, acc, latch, c, z, d_bus );
+mem mem( tclk, a_bus, inp, oup, instruction, dbusSelect, d_bus, view_mem );
 
     initial begin
 
-        reset=1'b0; instruction=8'b01100000; ldAcc = 1'b0; useAlu = 1'b0; dbusSelect = 1'b0; 
-        in_d_bus = 8'bz;
+        instruction=8'b010xxxxx; inp = 8'h0; dbusSelect = 1'b1; 
+        in_d_bus = 8'bz; inout_flag = 1'b0;
 
         //正常動作の確認
-            //Fetch cycle　ALU付近は何もしない
-            #STEP instruction =8'b01101000;
-            #STEP
-
-            //reset
-            #STEP reset = 1'b1;
-            #STEP reset = 1'b0;
-
-            //Execute cycle A
-                //LD命令
-                #STEP in_d_bus = 8'b10011110; ldAcc = 1'b1;
-                //ADD命令
-                #STEP ldAcc = 1'b0; useAlu = 1'b1; in_d_bus = 8'b01100001; instruction = 8'b000xxxxx;
-                //SUB命令
-                #STEP instruction = 8'b001xxxxx; in_d_bus = 8'b10011110; 
-                //NAND命令
-                #STEP instruction = 8'b010xxxxx; in_d_bus = 8'b10101010; 
-                //SHIFT命令
-                #STEP instruction = 8'b01100000; //LEFT SHIFT
-                #STEP instruction = 8'b01111111; //RIGHT SHIFT
-                //ST命令
-                #STEP in_d_bus = 8'b11111111; ldAcc = 1'b1;
-                #STEP instruction = 8'b101xxxxx;  ldAcc = 1'b0;
-
-            #STEP useAlu = 1'b0; 
-            
-            //Execute cycle B
-                #STEP in_d_bus = 8'b10101010; inout_flag = 1'b0;
-                #STEP dbusSelect = 1'b1;
-                #STEP dbusSelect = 1'b0;
+            //0~4番地までを読みだしてd_busに流す
+            #STEP dbusSelect = 1'b0; a_bus = 4'd0;
+            #STEP a_bus = 4'd1;
+            #STEP a_bus = 4'd2;
+            #STEP a_bus = 4'd3;
+            #STEP a_bus = 4'd4;
+            //30番地(input)をd_busに流す
+            #STEP a_bus = 30; inp=8'b11111111;
+            //LD命令の時
+                //d_busの内容をoutputするとき
+                #STEP instruction = 8'b10000000; in_d_bus = 8'b01010101; a_bus = 31; inout_flag = 1'b1; dbusSelect = 1'b1;
+                //d_busの内容をRAMに書き込むとき
+                #STEP a_bus = 5; 
         
         //異常入力の時の動作
-            //reset
-            #STEP reset = 1'bx;
-            #STEP reset = 1'bz;
-            #STEP reset = 1'b1;
-            #STEP reset = 1'b0;
+            //制御信号がおかしい時
+            #STEP dbusSelect = 1'bx; inout_flag = 1'b0; instruction=8'b010xxxxx;
+            #STEP dbusSelect = 1'bz;
 
-            //Execute cycle A
-                #STEP useAlu = 1'b1; inout_flag = 1'b1;
-                #STEP instruction = 8'bxxxxxxxx;
-                #STEP instruction = 8'bzzzzzzzz;
-                #STEP useAlu = 1'bx;
-                #STEP instruction = 8'b001xxxxx;
-                #STEP useAlu = 1'bz;
-                #STEP instruction = 8'b001xxxxx;
+            //番地がおかしい時にどうd_busにながれるか
+            #STEP dbusSelect = 1'b0; a_bus = 4'b000x; inout_flag = 1'b0; dbusSelect = 1'b0;
+            #STEP a_bus = 4'b000z;
 
-            //Execute cycle B
-                #STEP dbusSelect = 1'bx; inout_flag = 1'b0; useAlu = 1'b0;
-                #STEP dbusSelect = 1'bz;
 
         #STEP $finish;
     end
 
     initial begin
-        $dumpfile("alu_out.vcd");
-        $dumpvars(0, alu_test);
+        $dumpfile("mem_out.vcd");
+        $dumpvars(0, mem_test);
     end
+
 
 endmodule
