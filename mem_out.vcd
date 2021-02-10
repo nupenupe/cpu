@@ -1,0 +1,173 @@
+$date
+	Wed Feb 10 17:28:20 2021
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module mem_test $end
+$var wire 8 ! d_bus [7:0] $end
+$var wire 8 " view_mem [7:0] $end
+$var wire 8 # oup [7:0] $end
+$var reg 5 $ a_bus [4:0] $end
+$var reg 1 % dbusSelect $end
+$var reg 8 & in_d_bus [7:0] $end
+$var reg 1 ' inout_flag $end
+$var reg 8 ( inp [7:0] $end
+$var reg 8 ) instruction [7:0] $end
+$var reg 1 * tclk $end
+$scope module mem $end
+$var wire 5 + a_bus [4:0] $end
+$var wire 8 , d_bus [7:0] $end
+$var wire 1 % dbusSelect $end
+$var wire 8 - inp [7:0] $end
+$var wire 8 . instruction [7:0] $end
+$var wire 1 * tclk $end
+$var wire 8 / view_mem [7:0] $end
+$var reg 8 0 oup [7:0] $end
+$scope function memout $end
+$var reg 5 1 a_bus [4:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx 1
+bx 0
+bx /
+b10xxxxx .
+b0 -
+bz ,
+bx +
+1*
+b10xxxxx )
+b0 (
+0'
+bz &
+1%
+bx $
+bx #
+bx "
+bz !
+$end
+#50
+0*
+#100
+1*
+b10011110 !
+b10011110 ,
+b0 1
+b0 $
+b0 +
+0%
+#150
+0*
+#200
+1*
+b10111111 !
+b10111111 ,
+b1 1
+b1 $
+b1 +
+#250
+0*
+#300
+1*
+b1000100 !
+b1000100 ,
+b10 1
+b10 $
+b10 +
+#350
+0*
+#400
+1*
+b11100000 !
+b11100000 ,
+b11 1
+b11 $
+b11 +
+#450
+0*
+#500
+1*
+b0 !
+b0 ,
+b100 1
+b100 $
+b100 +
+#550
+0*
+#600
+1*
+b11111111 !
+b11111111 ,
+b11110 1
+b11111111 (
+b11111111 -
+b11110 $
+b11110 +
+#650
+0*
+#700
+b1010101 #
+b1010101 0
+1*
+b1010101 !
+b1010101 ,
+b11111 1
+1%
+1'
+b11111 $
+b11111 +
+b1010101 &
+b10000000 )
+b10000000 .
+#750
+0*
+#800
+b1010101 "
+b1010101 /
+1*
+b101 1
+b101 $
+b101 +
+#850
+0*
+#900
+1*
+bx !
+bx ,
+b10xxxxx )
+b10xxxxx .
+0'
+x%
+#950
+0*
+#1000
+1*
+z%
+#1050
+0*
+#1100
+1*
+b0x 1
+bx "
+bx /
+b0x $
+b0x +
+0%
+#1150
+0*
+#1200
+1*
+b0z 1
+b0z $
+b0z +
+#1250
+0*
+#1300
+1*
