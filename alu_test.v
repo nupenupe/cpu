@@ -23,8 +23,6 @@ reg inout_flag = 1;
 //双方向信号対応用
 assign d_bus = (inout_flag)? in_d_bus: 8'bz;
 
-
-
 parameter STEP = 100;
 
 alu alu( reset, tclk, instruction, ldAcc, useAlu, dbusSelect, acc, latch, c, z, d_bus );
@@ -56,12 +54,13 @@ alu alu( reset, tclk, instruction, ldAcc, useAlu, dbusSelect, acc, latch, c, z, 
                 #STEP instruction = 8'b01100000; //LEFT SHIFT
                 #STEP instruction = 8'b01111111; //RIGHT SHIFT
                 //ST命令
-                #STEP instruction = 8'b101xxxxx;
+                #STEP in_d_bus = 8'b11111111; ldAcc = 1'b1;
+                #STEP instruction = 8'b101xxxxx;  ldAcc = 1'b0;
 
-                #STEP useAlu = 1'b0; 
+            #STEP useAlu = 1'b0; 
             
             //Execute cycle B
-                #STEP in_d_bus = 8'b11111111; inout_flag = 1'b0;
+                #STEP in_d_bus = 8'b10101010; inout_flag = 1'b0;
                 #STEP dbusSelect = 1'b1;
                 #STEP dbusSelect = 1'b0;
         
@@ -92,6 +91,5 @@ alu alu( reset, tclk, instruction, ldAcc, useAlu, dbusSelect, acc, latch, c, z, 
         $dumpfile("alu_out.vcd");
         $dumpvars(0, alu_test);
     end
-
 
 endmodule
